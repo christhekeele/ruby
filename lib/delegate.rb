@@ -386,8 +386,17 @@ end
 #     # ...
 #   end
 #
-def DelegateClass(superclass)
-  klass = Class.new(Delegator)
+# DelegateClass also accepts a block, so we could have written the previous example like:
+#
+#   Tempfile = DelegateClass(File) do
+#     # implementation...
+#   end
+#
+# This would allow us to pass the File delegate class around in variables before naming it
+# by assigning it to a constant.
+#
+def DelegateClass(superclass, &block)
+  klass = Class.new(Delegator, &block)
   methods = superclass.instance_methods
   methods -= ::Delegator.public_api
   methods -= [:to_s,:inspect,:=~,:!~,:===]
